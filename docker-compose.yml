@@ -1,0 +1,115 @@
+version: '3.8'
+
+services:
+  # MongoDB for Auth Service
+  auth-db:
+    image: mongo:7.0
+    container_name: erp-auth-db
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: erp_auth
+    ports:
+      - "27017:27017"
+    volumes:
+      - auth-db-data:/data/db
+    networks:
+      - erp-network
+
+  # MongoDB for Product Service
+  product-db:
+    image: mongo:7.0
+    container_name: erp-product-db
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: erp_products
+    ports:
+      - "27018:27017"
+    volumes:
+      - product-db-data:/data/db
+    networks:
+      - erp-network
+
+  # Auth Service
+  auth-service:
+    build:
+      context: ./services/auth-service
+      dockerfile: Dockerfile
+    container_name: erp-auth-service
+    restart: unless-stopped
+    environment:
+      PORT: 3001
+      MONGODB_URI: mongodb://auth-db:27017/erp_auth
+      JWT_SECRET: ${JWT_SECRET:-your_super_secret_jwt_key_change_this}
+      JWT_EXPIRE: 7d
+      NODE_ENV: production
+    ports:
+      - "3001:3001"
+    depends_on:
+      - auth-db
+    networks:
+      - erp-network
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Product Service
+  product-service:
+    build:
+      context: ./services/product-service
+      dockerfile: Dockerfile
+    container_name: erp-product-service
+    restart: unless-stopped
+    environment:
+      PORT: 3002
+      MONGODB_URI: mongodb://product-db:27017/erp_products
+      JWT_SECRET: ${JWT_SECRET:-your_super_secret_jwt_key_change_this}
+      NODE_ENV: production
+    ports:
+      - "3002:3002"
+    depends_on:
+      - product-db
+    networks:
+      - erp-network
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: ./services/api-gateway
+      dockerfile: Dockerfile
+    container_name: erp-api-gateway
+    restart: unless-stopped
+    environment:
+      PORT: 3000
+      JWT_SECRET: ${JWT_SECRET:-your_super_secret_jwt_key_change_this}
+      AUTH_SERVICE_URL: http://auth-service:3001
+      PRODUCT_SERVICE_URL: http://product-service:3002
+      NODE_ENV: production
+      RATE_LIMIT_WINDOW_MS: 900000
+      RATE_LIMIT_MAX_REQUESTS: 100
+    ports:
+      - "3000:3000"
+    depends_on:
+      - auth-service
+      - product-service
+    networks:
+      - erp-network
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  erp-network:
+    driver: bridge
+
+volumes:
+  auth-db-data:
+  product-db-data:
