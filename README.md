@@ -2,7 +2,7 @@
 
 A complete microservices-based ERP system built with Node.js, featuring authentication, product management, and stock tracking with comprehensive audit logging.
 
-## 🏗️ Architecture Overview
+## Architecture Overview
 
 ### System Architecture
 
