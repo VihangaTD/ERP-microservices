@@ -146,7 +146,7 @@ A complete microservices-based ERP system built with Node.js, featuring authenti
 }
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -301,7 +301,7 @@ Expected response:
 }
 ```
 
-## 📚 API Documentation
+## API Documentation
 
 Base URL: `http://localhost:3000`
 
@@ -701,34 +701,34 @@ Import the provided Postman collection for easier testing. The collection includ
    - Production vs development error messages
    - Centralized error handling
 
-## 🚀 Bonus Features Implemented
+## Features Implemented
 
-✅ **Docker & Docker Compose**
+ **Docker & Docker Compose**
 - Complete containerization
 - Multi-container orchestration
 - Development and production configurations
 
-✅ **Health Check APIs**
+ **Health Check APIs**
 - Service-level health checks
 - Gateway aggregated health status
 - Container health checks
 
-✅ **Pagination & Search**
+ **Pagination & Search**
 - Efficient pagination for product listings
 - Full-text search across multiple fields
 - Category filtering
 
-✅ **Logging**
+ **Logging**
 - Structured error logging
 - Request/response logging
 - Stock change audit trail
 
-✅ **Stock History**
+ **Stock History**
 - Complete audit trail for stock changes
 - Query stock history by product
 - Timestamp-based tracking
 
-## 📝 Key Design Decisions
+## Key Design Decisions
 
 ### 1. Service Isolation
 - Each service has its own database
@@ -770,7 +770,7 @@ Import the provided Postman collection for easier testing. The collection includ
 }
 ```
 
-## 🛠️ Development
+## Development
 
 ### Running in Development Mode
 
@@ -805,7 +805,7 @@ service/
 └── server.js        # Entry point
 ```
 
-## 📊 Performance Considerations
+## Performance Considerations
 
 1. **Database Indexing**
    - Indexed fields: email, companyId, sku
@@ -820,7 +820,7 @@ service/
    - Prevents large data transfers
    - Improves response times
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
